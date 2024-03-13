@@ -145,21 +145,12 @@ describe("Order repository test", () => {
 
         order.changeItems([orderItem2]);
 
-        console.log("Order alterado a ser alterado");
-        console.log(order);
-        
-
         await orderRepository.update(order);
 
     const orderModel = await OrderModel.findOne({
         where: { id: order.id },
         include: ["items"],
     });
-
-        console.log("Model Log");
-        console.log(orderModel.toJSON());
-        
-        
 
         expect(orderModel.toJSON()).toStrictEqual({
             id: "123",
@@ -258,17 +249,56 @@ describe("Order repository test", () => {
             2
         );
 
+        const orderItem2 = new OrderItem(
+            "2",
+            product.name,
+            product.price,
+            product.id,
+            2
+        );
+
         const order1 = new Order("123", "123", [orderItem]);
-        const order2 = new Order("124", "123", [orderItem]);
+        const order2 = new Order("124", "123", [orderItem2]);
 
         const orderRepository = new OrderRepository();
         await orderRepository.create(order1);
         await orderRepository.create(order2);
 
-        const ordersFound = await orderRepository.findAll();
-        
+        const ordersFound = await OrderModel.findAll({  include: ["items"] });
+
         expect(ordersFound).toHaveLength(2);
-        expect(ordersFound).toContain(order1);
-        expect(ordersFound).toContain(order2);
+
+        expect(ordersFound[0].toJSON()).toStrictEqual({
+            id: "123",
+            customer_id: "123",
+            total: order1.total(),
+            items: [
+                {
+                    id:orderItem.id,
+                    name: orderItem.name,
+                    price: orderItem.price,
+                    quantity: orderItem.quantity,
+                    order_id: "123",
+                    product_id: "123",
+                }
+            ],
+        });
+
+        expect(ordersFound[1].toJSON()).toStrictEqual({
+            id: "124",
+            customer_id: "123",
+            total: order2.total(),
+            items: [
+                {
+                    id:orderItem2.id,
+                    name: orderItem2.name,
+                    price: orderItem2.price,
+                    quantity: orderItem2.quantity,
+                    order_id: "124",
+                    product_id: "123",
+                }
+            ],
+        });
     })
+
 });
