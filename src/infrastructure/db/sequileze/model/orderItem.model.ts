@@ -31,7 +31,7 @@ import ProductModel from "./product.model";
     declare order_id: string;
   
     @BelongsTo(() => OrderModel)
-    declare order: OrderModel;
+    declare order:Awaited< OrderModel>;
   
     @Column({ allowNull: false })
     declare quantity: number;
