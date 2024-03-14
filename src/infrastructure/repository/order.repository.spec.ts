@@ -264,41 +264,11 @@ describe("Order repository test", () => {
         await orderRepository.create(order1);
         await orderRepository.create(order2);
 
-        const ordersFound = await OrderModel.findAll({  include: ["items"] });
+        const ordersFound = await orderRepository.findAll();
 
         expect(ordersFound).toHaveLength(2);
-
-        expect(ordersFound[0].toJSON()).toStrictEqual({
-            id: "123",
-            customer_id: "123",
-            total: order1.total(),
-            items: [
-                {
-                    id:orderItem.id,
-                    name: orderItem.name,
-                    price: orderItem.price,
-                    quantity: orderItem.quantity,
-                    order_id: "123",
-                    product_id: "123",
-                }
-            ],
-        });
-
-        expect(ordersFound[1].toJSON()).toStrictEqual({
-            id: "124",
-            customer_id: "123",
-            total: order2.total(),
-            items: [
-                {
-                    id:orderItem2.id,
-                    name: orderItem2.name,
-                    price: orderItem2.price,
-                    quantity: orderItem2.quantity,
-                    order_id: "124",
-                    product_id: "123",
-                }
-            ],
-        });
+        expect(ordersFound[0]).toStrictEqual(order1);
+        expect(ordersFound[1]).toStrictEqual(order2);
     })
 
 });
