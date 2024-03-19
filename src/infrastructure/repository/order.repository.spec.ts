@@ -269,6 +269,11 @@ describe("Order repository test", () => {
         expect(ordersFound).toHaveLength(2);
         expect(ordersFound[0]).toStrictEqual(order1);
         expect(ordersFound[1]).toStrictEqual(order2);
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 331063f (Aulas events)
     })
 
 });
