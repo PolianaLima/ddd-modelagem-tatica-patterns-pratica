@@ -44,6 +44,7 @@ export default class Address {
             throw new Error('Zip is required');
         }
     }
+    
     changeStreet(street: string) {
         this._street = street;
     }

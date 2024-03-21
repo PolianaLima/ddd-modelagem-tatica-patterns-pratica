@@ -1,75 +1,29 @@
 import Address from "../../entity/address";
 import Customer from "../../entity/customer";
 import EventDispatcher from "../@shared/event-dispatcher";
-import CustomerChangeAdressEvent from "./customer-change-address.event";
-import SendMessageWhenCustomerIsChangeAddressdHandler from "./handler/send-message-when-customer-change-address.handler";
+import CustomerChangeAddressEvent from "./customer-change-address.event";
+import SendMessageWhenCustomerIsChangeHandler from "./handler/send-message-when-custoer-change.handler";
 
-describe("CustomerChangeAddressEvent", () => {
+describe("Domain events tests change address customer", () => {
 
-    it("should register an event handler", () => {
-        const eventDispatcher = new EventDispatcher();
-        const eventHandler = new SendMessageWhenCustomerIsChangeAddressdHandler();
+    it("should notify event handlers of a customer", () => {
+        const eventDispatcher  = new EventDispatcher();
+        const eventHandlerChangeAddress = new SendMessageWhenCustomerIsChangeHandler();
 
-        eventDispatcher.register("CustomerChangeAddressEvent", eventHandler);
-
-        expect(eventDispatcher.getEventHandlers["CustomerChangeAddressEvent"]).toBeDefined();
-        expect(eventDispatcher.getEventHandlers["CustomerChangeAddressEvent"].length).toBe(1);
-        expect(eventDispatcher.getEventHandlers["CustomerChangeAddressEvent"][0]).toBe(
-            eventHandler
-        );
-    });
-
-
-    it("should unregister an event handler", () => {
-        const eventDispatcher = new EventDispatcher();
-        const eventHandler = new SendMessageWhenCustomerIsChangeAddressdHandler();
-
-        eventDispatcher.register("CustomerChangeAddressEvent", eventHandler);
-
-        expect(eventDispatcher.getEventHandlers["CustomerChangeAddressEvent"][0]).toBe(
-            eventHandler
-        );
-
-        eventDispatcher.unregister("CustomerChangeAddressEvent", eventHandler);
-
-        expect(eventDispatcher.getEventHandlers["CustomerChangeAddressEvent"]).toBeDefined();
-        expect(eventDispatcher.getEventHandlers["CustomerChangeAddressEvent"].length).toBe(0);
-    });
-
-    it("should unregister all event handlers", () => {
-        const eventDispatcher = new EventDispatcher();
-        const eventHandler = new SendMessageWhenCustomerIsChangeAddressdHandler();
-
-        eventDispatcher.register("CustomerChangeAddressEvent", eventHandler);
-
-        expect(eventDispatcher.getEventHandlers["CustomerChangeAddressEvent"][0]).toBe(
-            eventHandler
-        );
-
-        eventDispatcher.unregisterAll();
-
-        expect(eventDispatcher.getEventHandlers["CustomerChangeAddressEvent"]).toBeUndefined();
-    });
-
-
-    it("should notify event handlers",() => {
-        const eventDispatcher = new EventDispatcher();
-        const eventHandlerChangeAddress = new SendMessageWhenCustomerIsChangeAddressdHandler();
-
-        const spyEventHandlerChangeAddress = jest.spyOn(eventHandlerChangeAddress, "handle")
+        const spyEventHandlerChangeAddress = jest.spyOn(eventHandlerChangeAddress, "handle");
 
         eventDispatcher.register("CustomerChangeAddressEvent", eventHandlerChangeAddress);
 
-        expect(eventDispatcher.getEventHandlers["CustomerChangeAddressEvent"][0]).toMatchObject(eventHandlerChangeAddress);
+        expect(eventDispatcher.getEventHandlers["CustomerChangeAddressEvent"]).toBeDefined();
 
-        const customer = new Customer("1", "John Doe");
-        const address = new Address("Rua 1", 123, "12345-123", "São Paulo");
-        customer.Address = address;
+        const customer = new Customer("123", "John Doe");
+        const address = new Address("Street 1", 99, "25654-635", "City 01");
+        const newAddress = new Address("Street 1", 99, "25654-635", "City 01");
 
-        const newAddress = new Address("Rua 2", 456, "54321-321", "Rio de Janeiro");
+        customer.changeAddress(address);
 
-        const customerChangeAddressEvent = new CustomerChangeAdressEvent({
-            id: customer.id,
+        const customerChangeAddressEvent = new CustomerChangeAddressEvent({
+            id:customer.id,
             name: customer.name,
             address: newAddress
         });

@@ -1,25 +1,19 @@
 import Address from "../../entity/address";
 import EventInterface from "../@shared/event.interface";
 
-type dataChangeAddress = {
+type addressCustomerChange = {
     id: string,
     name: string,
-    address: Address;
+    address: Address
+
 }
 
-
-export default class CustomerChangeAdressEvent implements EventInterface{
-
+export default class CustomerChangeAddressEvent implements EventInterface{
     dataTimeOccured: Date;
-    eventData: dataChangeAddress;
+    eventData: addressCustomerChange;
 
-    constructor(eventData: dataChangeAddress){
-        this.dataTimeOccured = new Date();
-        this.eventData = eventData;
+    constructor(eventData: any) {
+        this.dataTimeOccured = new Date()
+        this.eventData = eventData
     }
-
-    get dataAddress(){
-        return this.eventData;
-    }
-
 }
